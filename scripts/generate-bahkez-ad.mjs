@@ -1,5 +1,6 @@
 import { writeFile } from "node:fs/promises";
 
+const API_BASE_URL = "https://api.higgsfield.ai";
 const TERMINAL = new Set(["completed", "failed", "nsfw", "canceled"]);
 const POLL_MS = 4000;
 const DEADLINE_MS = 10 * 60_000;
@@ -50,15 +51,12 @@ async function readJson(response) {
 }
 
 async function main() {
-  const baseUrl = required("HF_API_BASE_URL").replace(/\/$/, "");
-  const apiKey = required("HF_PLATFORM_KEY");
-  if (!apiKey.includes(":")) throw new Error("HF_PLATFORM_KEY must use the repo's id:secret format.");
-
+  const apiKey = required("HF_API_KEY");
   const prompt = process.env.BAHKEZ_PROMPT?.trim() || DEFAULT_PROMPT;
   const output = process.env.OUTPUT_FILE || "bahkez-team-building-ad.mp4";
 
   console.log("Submitting Bahkez ad to Seedance 2.5...");
-  const queued = await readJson(await fetch(`${baseUrl}/bytedance/seedance-2.5/text-to-video`, {
+  const queued = await readJson(await fetch(`${API_BASE_URL}/bytedance/seedance-2.5/text-to-video`, {
     method: "POST",
     headers: {
       Authorization: `Key ${apiKey}`,
@@ -82,7 +80,7 @@ async function main() {
   let status;
   while (Date.now() < deadline) {
     await new Promise((resolve) => setTimeout(resolve, POLL_MS));
-    status = await readJson(await fetch(`${baseUrl}/requests/${encodeURIComponent(requestId)}/status`, {
+    status = await readJson(await fetch(`${API_BASE_URL}/requests/${encodeURIComponent(requestId)}/status`, {
       headers: { Authorization: `Key ${apiKey}` },
     }));
 
