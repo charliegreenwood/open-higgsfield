@@ -1,23 +1,22 @@
 # Bahkez video ad workflow
 
-This branch adds a manual GitHub Actions workflow for generating a 30-second vertical Bahkez Team Building Uganda ad through the same Seedance 2.5 API mapping used by this repository.
+This branch adds a manual GitHub Actions workflow for generating a 30-second vertical Bahkez Team Building Uganda ad through the same Seedance 2.5 API family used by this repository.
 
-## What you need to add once
+## One-time setup
 
 In GitHub, open:
 
 **Settings → Secrets and variables → Actions → New repository secret**
 
-Add these two secrets:
+Add only this secret:
 
-1. `HF_API_BASE_URL`
-   - The generation API base URL used by your OpenHiggsfield instance.
-   - Do not include a trailing slash.
+- Name: `HF_API_KEY`
+- Secret: paste the complete API key copied from the Higgsfield API key page exactly as provided.
 
-2. `HF_PLATFORM_KEY`
-   - Your platform key in the same `id:secret` format expected by the app.
+Do **not** paste the API key into a normal repository file or commit.
 
-Do **not** paste either value into a file or commit.
+The API base URL is the public Higgsfield REST endpoint and is built into the generation script:
+`https://api.higgsfield.ai`
 
 ## How to generate the ad
 
@@ -40,4 +39,4 @@ The workflow asks Seedance 2.5 for:
 - MP4
 - generated audio
 
-The script intentionally tells the model not to render the phone number as visual text because AI-generated text can be unreliable; the phone number is spoken in the voiceover.
+The prompt tells the model to keep the footage realistic and not render the phone number as visual text; the phone number is spoken in the voiceover.
