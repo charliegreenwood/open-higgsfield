@@ -16,8 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      HF_API_BASE_URL: ${{ secrets.HF_API_BASE_URL }}
-      HF_PLATFORM_KEY: ${{ secrets.HF_PLATFORM_KEY }}
+      HF_API_KEY: ${{ secrets.HF_API_KEY }}
       BAHKEZ_PROMPT: ${{ inputs.prompt_override }}
       OUTPUT_FILE: bahkez-team-building-ad.mp4
 
