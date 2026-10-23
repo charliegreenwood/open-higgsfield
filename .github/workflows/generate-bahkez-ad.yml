@@ -1,0 +1,47 @@
+name: Generate Bahkez Team Building Ad
+
+on:
+  workflow_dispatch:
+    inputs:
+      prompt_override:
+        description: "Optional: replace the default Bahkez ad prompt"
+        required: false
+        type: string
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/generate-bahkez-ad.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      HF_API_KEY: ${{ secrets.HF_API_KEY }}
+      BAHKEZ_PROMPT: ${{ inputs.prompt_override }}
+      OUTPUT_FILE: bahkez-team-building-ad.mp4
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Generate video with open-higgsfield mapping
+        run: node scripts/generate-bahkez-ad.mjs
+
+      - name: Upload finished video
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bahkez-team-building-ad
+          path: bahkez-team-building-ad.mp4
+          if-no-files-found: error
+          retention-days: 7
